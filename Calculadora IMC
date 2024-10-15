@@ -1,0 +1,89 @@
+#####################
+#  Calculadora IMC  #
+#####################
+
+
+# Inicia as veriaveis 
+dadoDigitado = "*"
+imc = 0
+peso = 0
+altura = 0
+
+
+# Função para verificar se valor informado é numerico 
+def validaInputNumerico(valor_float):
+    try:
+        float(valor_float)
+    except ValueError:
+        return False
+    return True
+
+# Função para verifcar se usuário encerrou o programa
+def validaEncerrar(encerrar):
+    if encerrar.upper() == "X":
+        return True
+    return False
+
+# Função para retornar o calculo IMC
+def calculaIMC(pPeso, pAltura):
+    return pPeso / (pAltura ** 2)
+
+# Função para tratar numeros inseridos com virgula
+def formataValorFloat(valor_float):
+    return valor_float.replace(',','.')
+
+# Função para retornar classificação do IMC
+def informaClassIMC(vIMC):
+    if vIMC <= 18.5:
+        return 'Baixo peso'
+    elif vIMC > 18.5 and vIMC <= 24.9:
+        return 'Normal'
+    elif vIMC >= 25 and vIMC <= 29.9:
+        return 'Sobrepeso'
+    elif vIMC >= 30 and vIMC <= 34.9:	
+        return 'Obesidade grau I'
+    elif vIMC >= 35 and vIMC <= 39.9:	
+        return 'Obesidade grau II'
+    elif vIMC >= 40:
+        return 'Obesidade grau III'
+    else:
+        return 'Classificação invalida!!'
+
+# Painel informativo
+print('______________________Calculador de IMC______________________')
+print('|                                                            ')
+print('|                                     Para sair informe: X   ')
+print('|                                                            ')
+print('|____________________________________________________________')
+print('|                                                            ')
+
+# Solicita o peso do usuário até que ele seja numerico.
+while validaInputNumerico(dadoDigitado) == False:
+    if validaEncerrar(dadoDigitado) == True:
+        break
+    dadoDigitado = input('| Informe o peso em quilogramas: ')
+    dadoDigitado = formataValorFloat(dadoDigitado)
+
+if validaEncerrar(dadoDigitado) == False:
+    peso = float(dadoDigitado)
+    dadoDigitado = "*"
+
+    # Solicita o altura do usuário até que ele seja numerico.
+    while validaInputNumerico(dadoDigitado) == False:
+        if validaEncerrar(dadoDigitado) == True:
+            break
+        dadoDigitado = input('| Informe a altura em metros: ')
+        dadoDigitado = formataValorFloat(dadoDigitado)
+
+    if validaEncerrar(dadoDigitado) == False:
+        altura = float(dadoDigitado)
+        imc = calculaIMC(peso, altura)
+
+        print('|____________________________________________________________')
+        print('|      __VALOR_DO_IMC__              __CLASSIFICAÇÃO__')
+        print('|           {:.2f}                         {}     '.format(imc, informaClassIMC(imc)))
+        print('|____________________________________________________________')
+
+
+if validaEncerrar(dadoDigitado) == True:
+    print('|___Programa encerrado com sucesso!')
