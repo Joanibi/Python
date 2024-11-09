@@ -1,0 +1,140 @@
+from datetime import datetime
+
+produtos = []
+categorias = []
+movimentacoes = []
+
+def cadastro_produto(id, codigo, nome, cod_categoria, quantidade, preco_custo, preco_venda, peso):
+    novo_produto = {
+        'id_produto' : id,
+        'codigo' : codigo,
+        'nome' : nome,
+        'categoria' : cod_categoria,
+        'quantidade' : quantidade,
+        'vl_custo' : preco_custo,
+        'vl_venda' : preco_venda,
+        'peso' : peso
+    }
+    # Verifica se a categoria existe
+    if categoria_existe(cod_categoria) == True:
+        if produto_existe(codigo) == False:
+            produtos.append(novo_produto)
+            print('Produto cadastrado!')
+        else:
+            print('Produto já existe!')
+    else:
+        print('Categoria não encontrada!')
+
+def cadastro_categoria(id, codigo, nome):
+    nova_categoria = {
+        'id_categoria' : id,
+        'codigo' : codigo,
+        'nome' : nome,
+    }
+    if categoria_existe(codigo) == False:
+        categorias.append(nova_categoria)
+        print('Categoria cadastrada!')
+    else: 
+        print('Categoria já cadastrada!')
+
+def produto_existe(codigo): 
+    for produto in produtos: 
+        if produto['codigo'] == codigo: 
+            return True 
+    return False 
+
+def categoria_existe(codigo): 
+    for categoria in categorias: 
+        if categoria['codigo'] == codigo: 
+            return True 
+    return False
+
+def registrar_entrada(codigo, quantidade): 
+    produto = consultar_produto(codigo) 
+    if produto: 
+        produto['quantidade'] += quantidade 
+        movimentacao = { 
+            'data': datetime.now().strftime("%d/%m/%Y %H:%M:%S"), 
+            'tipo': 'entrada', 
+            'produto': produto['codigo'], 
+            'quantidade': quantidade 
+        } 
+        movimentacoes.append(movimentacao) 
+        print('Entrada registrada com sucesso!') 
+    else: print("Produto não encontrado.") 
+
+def registrar_saida(codigo, quantidade): 
+    produto = consultar_produto(codigo) 
+    if produto: 
+        if produto['quantidade'] >= quantidade: 
+            produto['quantidade'] -= quantidade 
+            movimentacao = { 
+                'data': datetime.now().strftime("%d/%m/%Y %H:%M:%S"), 
+                'tipo': 'saida', 
+                'produto': produto['codigo'], 
+                'quantidade': quantidade 
+            } 
+            movimentacoes.append(movimentacao) 
+            print('Saída registrada com sucesso!') 
+        else: 
+            print("Quantidade em estoque insuficiente.") 
+    else: print("Produto não encontrado.")
+
+def consultar_produto(codigo): 
+    for produto in produtos: 
+        if produto['codigo'] == codigo: 
+            return produto 
+    print("Produto não encontrado.") 
+    return None 
+
+def consulta_categoria(codigo): 
+    for categoria in categorias: 
+        if categoria['codigo'] == codigo: 
+            return categoria['nome'] 
+    print("Categoria não encontrada.") 
+    return None 
+
+def consultar_movimentacoes_produto(produto):
+    for movimentacao in movimentacoes:
+        if movimentacao['produto'] == produto:
+            print(f"Data: {movimentacao['data']}, Tipo: {movimentacao['tipo']}, Quantidade: {movimentacao['quantidade']}")
+
+def gerar_relatorio_estoque():
+    print("Relatório de Estoque:") 
+    print("---------------------") 
+    for produto in produtos: 
+        print(f"ID: {produto['id_produto']}") 
+        print(f"Código: {produto['codigo']}") 
+        print(f"Nome: {produto['nome']}") 
+        print(f"Categoria: {consulta_categoria(produto['categoria'])}") 
+        print(f"Quantidade em Estoque: {produto['quantidade']}") 
+        print(f"Preço de Custo: {produto['vl_custo']}") 
+        print(f"Preço de Venda: {produto['vl_venda']}") 
+        print(f"Peso: {produto['peso']}") 
+        print("---------------------")
+
+# Exemplo de uso 
+
+# cadastrando a categoria
+cadastro_categoria(1, '001', 'Eletrônicos')
+cadastro_categoria(3, '001', 'Eletrônicos') 
+cadastro_categoria(2, '002', 'Eletrodoméstico') 
+
+# cadastrando a produtos
+cadastro_produto(1, '001', 'Smartphone', '001', 50, 500, 700, 0.2) 
+cadastro_produto(2, '002', 'Microondas', '002', 70, 200, 370, 2.4) 
+
+# Registrando entrada
+registrar_entrada('001', 20) 
+registrar_saida('001', 10) 
+
+# Registrando saida
+registrar_saida('002', 10)
+registrar_entrada('002', 80) 
+
+# Gerando relatorio de estoque do produto
+gerar_relatorio_estoque()
+
+# Gerando relatorio de motimentações
+consultar_movimentacoes_produto('001')
+consultar_movimentacoes_produto('002')
