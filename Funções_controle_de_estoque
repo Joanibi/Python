@@ -94,10 +94,11 @@ def consulta_categoria(codigo):
     print("Categoria não encontrada.") 
     return None 
 
-def consultar_movimentacoes_produto(produto):
-    for movimentacao in movimentacoes:
-        if movimentacao['produto'] == produto:
-            print(f"Data: {movimentacao['data']}, Tipo: {movimentacao['tipo']}, Quantidade: {movimentacao['quantidade']}")
+def consultar_movimentacoes_produto(produto): 
+    for movimentacao in movimentacoes: 
+        if movimentacao['produto'] == produto: 
+            nome_produto = consultar_produto(movimentacao['produto'])['nome'] 
+            print(f"Produto: {nome_produto}, Data: {movimentacao['data']}, Tipo: {movimentacao['tipo']}, Quantidade: {movimentacao['quantidade']}")
 
 def gerar_relatorio_estoque():
     print("Relatório de Estoque:") 
